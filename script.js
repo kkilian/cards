@@ -176,36 +176,33 @@ function updateMaxCards() {
 }
 
 function updateCarouselCard(cardElement, card, showQuestion = false) {
-    const valueSpan = cardElement.querySelector('.card-value');
-    const suitSpan = cardElement.querySelector('.card-suit');
-    const questionMark = cardElement.querySelector('.question-mark');
+    const cardInner = cardElement.querySelector('.card-inner');
+    
+    // Clear the card inner content
+    cardInner.innerHTML = '';
     
     if (showQuestion) {
-        if (valueSpan) valueSpan.style.display = 'none';
-        if (suitSpan) suitSpan.style.display = 'none';
-        if (!questionMark) {
-            const qMark = document.createElement('span');
-            qMark.className = 'question-mark';
-            qMark.textContent = '?';
-            cardElement.querySelector('.card-inner').appendChild(qMark);
-        } else {
-            questionMark.style.display = 'block';
-        }
+        // Show question mark
+        const qMark = document.createElement('span');
+        qMark.className = 'question-mark';
+        qMark.textContent = '?';
+        cardInner.appendChild(qMark);
     } else if (card) {
-        if (questionMark) questionMark.style.display = 'none';
-        if (valueSpan) {
-            valueSpan.style.display = 'block';
-            valueSpan.textContent = card.value;
-            valueSpan.className = suitColors[card.suit];
-        }
-        if (suitSpan) {
-            suitSpan.style.display = 'block';
-            suitSpan.textContent = card.suit;
-            suitSpan.className = suitColors[card.suit];
-        }
-    } else {
-        cardElement.style.visibility = 'hidden';
+        // Show card value and suit
+        const valueSpan = document.createElement('span');
+        valueSpan.className = 'card-value ' + suitColors[card.suit];
+        valueSpan.textContent = card.value;
+        
+        const suitSpan = document.createElement('span');
+        suitSpan.className = 'card-suit ' + suitColors[card.suit];
+        suitSpan.textContent = card.suit;
+        
+        cardInner.appendChild(valueSpan);
+        cardInner.appendChild(suitSpan);
     }
+    
+    // Always ensure card is visible
+    cardElement.style.visibility = 'visible';
 }
 
 function updateCarousel() {
@@ -225,6 +222,8 @@ function updateCarousel() {
         previousCard.style.visibility = 'hidden';
     }
     
+    // Always update current card
+    currentCard.style.visibility = 'visible';
     updateCarouselCard(currentCard, shownCardsHistory[currentHistoryIndex]);
     
     if (currentHistoryIndex < shownCardsHistory.length - 1) {
