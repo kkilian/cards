@@ -1,0 +1,365 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card-container {
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.card {
+    width: 180px;
+    height: 260px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: all 0.5s ease;
+    transform-style: preserve-3d;
+}
+
+.card.hidden {
+    opacity: 0;
+    transform: scale(0.8) rotateY(180deg);
+}
+
+.card.show {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+}
+
+.card-inner {
+    font-size: 4em;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-inner .red {
+    color: #e74c3c;
+}
+
+.card-inner .black {
+    color: #2c3e50;
+}
+
+.controls {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.control-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #34495e;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #3498db;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #3498db;
+    cursor: pointer;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+#start-btn {
+    background-color: #27ae60;
+    color: white;
+}
+
+#start-btn:hover:not(:disabled) {
+    background-color: #229954;
+    transform: translateY(-2px);
+}
+
+#stop-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+#stop-btn:hover:not(:disabled) {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+#reset-btn {
+    background-color: #3498db;
+    color: white;
+}
+
+#reset-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.info {
+    font-size: 1.2em;
+}
+
+#cards-shown {
+    font-weight: bold;
+    color: #3498db;
+}
+
+.suits-selection {
+    margin-bottom: 20px;
+}
+
+.suits-checkboxes {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.suit-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.suit-checkbox:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.suit-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.suit-label {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.suit-label.red {
+    color: #e74c3c;
+}
+
+.suit-label.black {
+    color: #ecf0f1;
+}
+
+.show-history-btn {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.3em;
+    background-color: #9b59b6;
+    color: white;
+    margin-top: 20px;
+}
+
+.show-history-btn:hover {
+    background-color: #8e44ad;
+    transform: translateY(-2px);
+}
+
+.show-history-btn.hidden {
+    display: none;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: #34495e;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-content h2 {
+    color: #ecf0f1;
+    margin-bottom: 20px;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    color: #ecf0f1;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #e74c3c;
+}
+
+.history-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.history-card {
+    width: 60px;
+    height: 85px;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.history-card .card-number {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    background-color: #3498db;
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.6em;
+}
+
+.history-card .red {
+    color: #e74c3c;
+}
+
+.history-card .black {
+    color: #2c3e50;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em;
+    }
+    
+    .card {
+        width: 140px;
+        height: 200px;
+    }
+    
+    .card-inner {
+        font-size: 3em;
+    }
+    
+    button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+    
+    .history-card {
+        width: 50px;
+        height: 70px;
+        font-size: 1.2em;
+    }
+}

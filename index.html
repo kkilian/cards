@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Losowe karty</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Losowe karty z talii</h1>
+        
+        <div class="card-container">
+            <div id="card" class="card hidden">
+                <div class="card-inner">
+                    <span id="card-value"></span>
+                    <span id="card-suit"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="interval">Odstęp czasowy: <span id="interval-value">3</span> sekund</label>
+                <input type="range" id="interval" min="1" max="10" value="3" step="0.5">
+            </div>
+            
+            <div class="control-group">
+                <label for="cards-count">Liczba kart do pokazania: <span id="cards-count-value">10</span></label>
+                <input type="range" id="cards-count" min="1" max="52" value="10">
+            </div>
+            
+            <div class="control-group suits-selection">
+                <label>Wybierz kolory kart:</label>
+                <div class="suits-checkboxes">
+                    <label class="suit-checkbox">
+                        <input type="checkbox" id="spades" value="♠" checked>
+                        <span class="suit-label black">♠ Pik</span>
+                    </label>
+                    <label class="suit-checkbox">
+                        <input type="checkbox" id="hearts" value="♥" checked>
+                        <span class="suit-label red">♥ Kier</span>
+                    </label>
+                    <label class="suit-checkbox">
+                        <input type="checkbox" id="diamonds" value="♦" checked>
+                        <span class="suit-label red">♦ Karo</span>
+                    </label>
+                    <label class="suit-checkbox">
+                        <input type="checkbox" id="clubs" value="♣" checked>
+                        <span class="suit-label black">♣ Trefl</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="start-btn">Start</button>
+                <button id="stop-btn" disabled>Stop</button>
+                <button id="reset-btn">Reset</button>
+            </div>
+            
+            <div class="info">
+                <p>Pokazane karty: <span id="cards-shown">0</span> / <span id="cards-total">10</span></p>
+            </div>
+            
+            <button id="show-history-btn" class="show-history-btn hidden">Pokaż kolejność</button>
+        </div>
+    </div>
+    
+    <div id="history-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Kolejność pokazanych kart</h2>
+            <div id="history-container" class="history-container"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
