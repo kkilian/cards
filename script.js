@@ -28,9 +28,19 @@ const cardsCountValueSpan = document.getElementById('cards-count-value');
 const cardsTotalSpan = document.getElementById('cards-total');
 const showHistoryBtn = document.getElementById('show-history-btn');
 const historyModal = document.getElementById('history-modal');
-const historyContainer = document.getElementById('history-container');
 const closeModalBtn = document.querySelector('.close');
 const suitCheckboxes = document.querySelectorAll('.suits-checkboxes input[type="checkbox"]');
+
+// Carousel elements
+const previousCard = document.getElementById('previous-card');
+const currentCard = document.getElementById('current-card');
+const nextCard = document.getElementById('next-card');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const currentPositionSpan = document.getElementById('current-position');
+const totalCardsSpan = document.getElementById('total-cards');
+
+let currentHistoryIndex = 0;
 
 function getSelectedSuits() {
     const selectedSuits = [];
@@ -165,33 +175,84 @@ function updateMaxCards() {
     }
 }
 
+function updateCarouselCard(cardElement, card, showQuestion = false) {
+    const valueSpan = cardElement.querySelector('.card-value');
+    const suitSpan = cardElement.querySelector('.card-suit');
+    const questionMark = cardElement.querySelector('.question-mark');
+    
+    if (showQuestion) {
+        if (valueSpan) valueSpan.style.display = 'none';
+        if (suitSpan) suitSpan.style.display = 'none';
+        if (!questionMark) {
+            const qMark = document.createElement('span');
+            qMark.className = 'question-mark';
+            qMark.textContent = '?';
+            cardElement.querySelector('.card-inner').appendChild(qMark);
+        } else {
+            questionMark.style.display = 'block';
+        }
+    } else if (card) {
+        if (questionMark) questionMark.style.display = 'none';
+        if (valueSpan) {
+            valueSpan.style.display = 'block';
+            valueSpan.textContent = card.value;
+            valueSpan.className = suitColors[card.suit];
+        }
+        if (suitSpan) {
+            suitSpan.style.display = 'block';
+            suitSpan.textContent = card.suit;
+            suitSpan.className = suitColors[card.suit];
+        }
+    } else {
+        cardElement.style.visibility = 'hidden';
+    }
+}
+
+function updateCarousel() {
+    // Update position counter
+    currentPositionSpan.textContent = currentHistoryIndex + 1;
+    totalCardsSpan.textContent = shownCardsHistory.length;
+    
+    // Update navigation buttons
+    prevBtn.disabled = currentHistoryIndex === 0;
+    nextBtn.disabled = currentHistoryIndex === shownCardsHistory.length - 1;
+    
+    // Update cards
+    if (currentHistoryIndex > 0) {
+        previousCard.style.visibility = 'visible';
+        updateCarouselCard(previousCard, shownCardsHistory[currentHistoryIndex - 1]);
+    } else {
+        previousCard.style.visibility = 'hidden';
+    }
+    
+    updateCarouselCard(currentCard, shownCardsHistory[currentHistoryIndex]);
+    
+    if (currentHistoryIndex < shownCardsHistory.length - 1) {
+        nextCard.style.visibility = 'visible';
+        updateCarouselCard(nextCard, null, true);
+    } else {
+        nextCard.style.visibility = 'hidden';
+    }
+}
+
 function showHistory() {
-    historyContainer.innerHTML = '';
-    
-    shownCardsHistory.forEach((card, index) => {
-        const historyCard = document.createElement('div');
-        historyCard.className = 'history-card';
-        
-        const cardNumber = document.createElement('div');
-        cardNumber.className = 'card-number';
-        cardNumber.textContent = index + 1;
-        
-        const cardValue = document.createElement('div');
-        cardValue.textContent = card.value;
-        cardValue.className = suitColors[card.suit];
-        
-        const cardSuit = document.createElement('div');
-        cardSuit.textContent = card.suit;
-        cardSuit.className = suitColors[card.suit];
-        
-        historyCard.appendChild(cardNumber);
-        historyCard.appendChild(cardValue);
-        historyCard.appendChild(cardSuit);
-        
-        historyContainer.appendChild(historyCard);
-    });
-    
+    currentHistoryIndex = 0;
+    updateCarousel();
     historyModal.classList.remove('hidden');
+}
+
+function showNextCard() {
+    if (currentHistoryIndex < shownCardsHistory.length - 1) {
+        currentHistoryIndex++;
+        updateCarousel();
+    }
+}
+
+function showPreviousCard() {
+    if (currentHistoryIndex > 0) {
+        currentHistoryIndex--;
+        updateCarousel();
+    }
 }
 
 intervalSlider.addEventListener('input', (e) => {
@@ -208,6 +269,8 @@ startBtn.addEventListener('click', startCardShow);
 stopBtn.addEventListener('click', stopCardShow);
 resetBtn.addEventListener('click', resetDeck);
 showHistoryBtn.addEventListener('click', showHistory);
+prevBtn.addEventListener('click', showPreviousCard);
+nextBtn.addEventListener('click', showNextCard);
 
 closeModalBtn.addEventListener('click', () => {
     historyModal.classList.add('hidden');

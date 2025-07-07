@@ -69,8 +69,37 @@
     <div id="history-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Kolejność pokazanych kart</h2>
-            <div id="history-container" class="history-container"></div>
+            <h2>Sprawdź swoją pamięć</h2>
+            
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <div class="carousel-card previous" id="previous-card">
+                        <div class="card-inner">
+                            <span class="card-value"></span>
+                            <span class="card-suit"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="carousel-card current" id="current-card">
+                        <div class="card-inner">
+                            <span class="card-value"></span>
+                            <span class="card-suit"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="carousel-card next" id="next-card">
+                        <div class="card-inner">
+                            <span class="question-mark">?</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="carousel-controls">
+                <button id="prev-btn" class="nav-btn" disabled>← Poprzednia</button>
+                <span class="card-counter">Karta <span id="current-position">1</span> z <span id="total-cards">0</span></span>
+                <button id="next-btn" class="nav-btn">Następna →</button>
+            </div>
         </div>
     </div>
     
