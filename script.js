@@ -109,7 +109,7 @@ function startCardShow() {
     }
     
     if (deck.length === 0) {
-        resetDeck();
+        resetDeck(true);
     }
     
     isRunning = true;
@@ -149,12 +149,14 @@ function stopCardShow() {
     cardsCountSlider.disabled = false;
 }
 
-function resetDeck() {
+function resetDeck(preserveHistory = false) {
     stopCardShow();
     createDeck();
     shuffleDeck();
     cardsShown = 0;
-    shownCardsHistory = [];
+    if (!preserveHistory) {
+        shownCardsHistory = [];
+    }
     cardsShownSpan.textContent = cardsShown;
     cardElement.classList.add('hidden');
     cardElement.classList.remove('show');
@@ -266,7 +268,7 @@ cardsCountSlider.addEventListener('input', (e) => {
 
 startBtn.addEventListener('click', startCardShow);
 stopBtn.addEventListener('click', stopCardShow);
-resetBtn.addEventListener('click', resetDeck);
+resetBtn.addEventListener('click', () => resetDeck(false));
 showHistoryBtn.addEventListener('click', showHistory);
 prevBtn.addEventListener('click', showPreviousCard);
 nextBtn.addEventListener('click', showNextCard);
@@ -285,10 +287,10 @@ suitCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
         updateMaxCards();
         if (deck.length > 0) {
-            resetDeck();
+            resetDeck(false);
         }
     });
 });
 
-resetDeck();
+resetDeck(false);
 updateMaxCards();

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Losowe karty</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .success { color: green; }
+        .fail { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Test - Sprawdzenie pamięci kart</h1>
+    
+    <div class="test-section">
+        <h2>Test scenariusz:</h2>
+        <ol>
+            <li>Otwórz główną stronę w nowej karcie</li>
+            <li>Ustaw liczbę kart na 5</li>
+            <li>Kliknij "Start" i poczekaj aż wszystkie karty się wyświetlą</li>
+            <li>Kliknij "Sprawdź swoją pamięć"</li>
+            <li>Sprawdź czy wyświetlane karty są dokładnie te same co przed chwilą</li>
+        </ol>
+        
+        <div class="status info">
+            <p>Poprawka zastosowana:</p>
+            <ul>
+                <li>Funkcja resetDeck() teraz przyjmuje parametr preserveHistory</li>
+                <li>Przy starcie nowej sesji (deck.length === 0) historia jest zachowana</li>
+                <li>Przy kliknięciu Reset historia jest czyszczona</li>
+                <li>Przy zmianie kolorów kart historia jest czyszczona</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Oczekiwany rezultat:</h2>
+        <p class="status success">✓ Karty w "Sprawdź swoją pamięć" powinny być identyczne z wyświetlonymi</p>
+        <p class="status success">✓ Nawigacja między kartami powinna działać poprawnie</p>
+        <p class="status success">✓ Reset powinien czyścić historię</p>
+    </div>
+    
+    <div class="test-section">
+        <a href="index.html" target="_blank" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Otwórz aplikację</a>
+    </div>
+</body>
+</html>
