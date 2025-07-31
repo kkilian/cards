@@ -559,6 +559,19 @@ function deleteSession(index) {
         sessions.splice(index, 1);
         saveSessions();
         renderSessionHistory();
+        
+        // Update chart if it's currently open
+        if (!chartModal.classList.contains('hidden')) {
+            if (sessions.length === 0) {
+                // Close chart if no sessions left
+                closeChart();
+                alert('Brak sesji do wyświetlenia');
+            } else {
+                // Refresh chart with current filter settings
+                const fullDeckFilter = document.getElementById('full-deck-filter');
+                showProgressChart(fullDeckFilter.checked);
+            }
+        }
     }
 }
 
