@@ -74,19 +74,24 @@ h1 {
     height: 240px;
     background-color: #ffffff;
     border: 1px solid #000000;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    transition: opacity 0.2s ease;
+    transition: all 0.5s ease;
+    transform-style: preserve-3d;
 }
 
 .card.hidden {
     opacity: 0;
+    transform: scale(0.8) rotateY(180deg);
 }
 
 .card.show {
     opacity: 1;
+    transform: scale(1) rotateY(0deg);
 }
 
 .card-inner {
