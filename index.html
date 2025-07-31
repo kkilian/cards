@@ -56,6 +56,7 @@
                 <button id="start-btn">Start</button>
                 <button id="stop-btn" disabled>Stop</button>
                 <button id="reset-btn">Reset</button>
+                <button id="export-sessions-btn">Eksportuj sesje</button>
             </div>
             
             <div class="info">
@@ -63,6 +64,13 @@
             </div>
             
             <button id="show-history-btn" class="show-history-btn hidden">Pokaż kolejność</button>
+        </div>
+    </div>
+    
+    <div id="sessions-panel" class="sessions-panel">
+        <h2>Historia sesji</h2>
+        <div id="sessions-list" class="sessions-list">
+            <!-- Sessions will be dynamically added here -->
         </div>
     </div>
     
@@ -99,6 +107,21 @@
                 <button id="prev-btn" class="nav-btn" disabled>← Poprzednia</button>
                 <span class="card-counter">Karta <span id="current-position">1</span> z <span id="total-cards">0</span></span>
                 <button id="next-btn" class="nav-btn">Następna →</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="export-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close export-close">&times;</span>
+            <h2>Eksportuj sesje</h2>
+            <p class="export-info">Wybierz ilość ostatnich sesji do eksportu:</p>
+            
+            <div class="export-options">
+                <button class="export-option-btn" onclick="exportSessions(5)">Ostatnie 5 sesji</button>
+                <button class="export-option-btn" onclick="exportSessions(10)">Ostatnie 10 sesji</button>
+                <button class="export-option-btn" onclick="exportSessions(15)">Ostatnie 15 sesji</button>
+                <button class="export-option-btn" onclick="exportSessions(20)">Ostatnie 20 sesji</button>
             </div>
         </div>
     </div>

@@ -1,0 +1,324 @@
+{
+  "talia": {
+    "pik": {
+      "As": {
+        "karta": "As Pik",
+        "osoba": "Robert Lewandowski",
+        "czynnosc": "strzela gola z przewrotki",
+        "przedmiot": "napój izotoniczny Oshee"
+      },
+      "2": {
+        "karta": "2 Pik",
+        "osoba": "Adam Małysz",
+        "czynnosc": "skacze ze skoczni",
+        "przedmiot": "narty"
+      },
+      "3": {
+        "karta": "3 Pik",
+        "osoba": "Justyna Kowalczyk",
+        "czynnosc": "biega na nartach",
+        "przedmiot": "kijki"
+      },
+      "4": {
+        "karta": "4 Pik",
+        "osoba": "Robert Kubica",
+        "czynnosc": "wypadek samochodowy",
+        "przedmiot": "kask"
+      },
+      "5": {
+        "karta": "5 Pik",
+        "osoba": "Marcin Gortat",
+        "czynnosc": "robi wsad",
+        "przedmiot": "piłka do koszykówki"
+      },
+      "6": {
+        "karta": "6 Pik",
+        "osoba": "Anita Włodarczyk",
+        "czynnosc": "rzuca młotem z wirowania",
+        "przedmiot": "młot"
+      },
+      "7": {
+        "karta": "7 Pik",
+        "osoba": "Cristiano Ronaldo",
+        "czynnosc": "robi słynne SIUUUU",
+        "przedmiot": "koszulka Portugalii meczowa"
+      },
+      "8": {
+        "karta": "8 Pik",
+        "osoba": "Michał Kwiatkowski",
+        "czynnosc": "finiszuje na wyścigu",
+        "przedmiot": "rower"
+      },
+      "9": {
+        "karta": "9 Pik",
+        "osoba": "Mike Tyson",
+        "czynnosc": "boksuje",
+        "przedmiot": "rękawice bokserskie"
+      },
+      "10": {
+        "karta": "10 Pik",
+        "osoba": "Lionel Messi",
+        "czynnosc": "drybluje",
+        "przedmiot": "matero z yerba mate"
+      },
+      "Walet": {
+        "karta": "Walet Pik",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Dama": {
+        "karta": "Dama Pik",
+        "osoba": "Iga Świątek",
+        "czynnosc": "odbija piłkę rakietą",
+        "przedmiot": "piłka tenisowa"
+      },
+      "Król": {
+        "karta": "Król Pik",
+        "osoba": "Mariusz Pudzianowski",
+        "czynnosc": "podnosi coś ciężkiego",
+        "przedmiot": "kamień"
+      }
+    },
+    "kier": {
+      "As": {
+        "karta": "As Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "2": {
+        "karta": "2 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "3": {
+        "karta": "3 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "4": {
+        "karta": "4 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "5": {
+        "karta": "5 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "6": {
+        "karta": "6 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "7": {
+        "karta": "7 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "8": {
+        "karta": "8 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "9": {
+        "karta": "9 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "10": {
+        "karta": "10 Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Walet": {
+        "karta": "Walet Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Dama": {
+        "karta": "Dama Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Król": {
+        "karta": "Król Kier",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      }
+    },
+    "karo": {
+      "As": {
+        "karta": "As Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "2": {
+        "karta": "2 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "3": {
+        "karta": "3 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "4": {
+        "karta": "4 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "5": {
+        "karta": "5 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "6": {
+        "karta": "6 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "7": {
+        "karta": "7 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "8": {
+        "karta": "8 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "9": {
+        "karta": "9 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "10": {
+        "karta": "10 Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Walet": {
+        "karta": "Walet Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Dama": {
+        "karta": "Dama Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Król": {
+        "karta": "Król Karo",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      }
+    },
+    "trefl": {
+      "As": {
+        "karta": "As Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "2": {
+        "karta": "2 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "3": {
+        "karta": "3 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "4": {
+        "karta": "4 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "5": {
+        "karta": "5 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "6": {
+        "karta": "6 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "7": {
+        "karta": "7 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "8": {
+        "karta": "8 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "9": {
+        "karta": "9 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "10": {
+        "karta": "10 Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Walet": {
+        "karta": "Walet Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Dama": {
+        "karta": "Dama Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      },
+      "Król": {
+        "karta": "Król Trefl",
+        "osoba": "",
+        "czynnosc": "",
+        "przedmiot": ""
+      }
+    }
+  }
+}

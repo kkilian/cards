@@ -1,0 +1,138 @@
+<!-- SZABLON KARTY ANKI DLA PAO -->
+
+<!-- PRZÓD KARTY (Front Template) -->
+<div class="card-container">
+    {{Card}}
+</div>
+
+<style>
+.card-container {
+    text-align: center;
+    padding: 20px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style dla SVG kart */
+.card-container svg {
+    max-width: 180px;
+    max-height: 252px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    transition: transform 0.2s;
+}
+
+.card-container svg:hover {
+    transform: scale(1.05);
+}
+
+/* Alternatywny styl dla symboli tekstowych */
+.card-symbol {
+    font-size: 120px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.card-symbol.red {
+    color: #e74c3c;
+}
+
+.card-symbol.black {
+    color: #2c3e50;
+}
+</style>
+
+<!-- TYŁ KARTY (Back Template) -->
+<div class="card-container">
+    {{Card}}
+</div>
+
+<div class="pao-container">
+    {{Back}}
+</div>
+
+<style>
+.pao-container {
+    text-align: center;
+    padding: 30px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.pao-container > div {
+    background: #f5f5f5;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.pao-container b {
+    color: #2c3e50;
+    font-size: 1.4em;
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* Podział na linie dla lepszej czytelności */
+.pao-container > div {
+    line-height: 1.8;
+}
+
+/* Opcjonalne: różne kolory dla różnych kategorii */
+.tag-zwierzęta .pao-container b { color: #27ae60; }
+.tag-sportowcy .pao-container b { color: #3498db; }
+.tag-politycy .pao-container b { color: #e74c3c; }
+.tag-miasta .pao-container b { color: #f39c12; }
+
+/* Responsywność */
+@media (max-width: 600px) {
+    .card-container svg {
+        max-width: 140px;
+        max-height: 196px;
+    }
+    
+    .pao-container {
+        padding: 20px 15px;
+    }
+    
+    .pao-container b {
+        font-size: 1.2em;
+    }
+}
+
+/* Ciemny motyw */
+.night_mode .pao-container > div {
+    background: #333;
+    color: #ddd;
+}
+
+.night_mode .pao-container b {
+    color: #fff;
+}
+</style>
+
+<!-- STYLING (Shared between cards) -->
+<style>
+/* Podstawowe style dla całej karty */
+.card {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: white;
+    color: #333;
+}
+
+.night_mode.card {
+    background: #1a1a1a;
+    color: #ddd;
+}
+
+/* Animacja pojawiania się */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card-container, .pao-container {
+    animation: fadeIn 0.3s ease-out;
+}
+</style>

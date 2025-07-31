@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator kart do talii</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .card-wrapper {
+            text-align: center;
+        }
+        
+        .card-svg {
+            width: 150px;
+            height: 210px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .card-svg:hover {
+            transform: scale(1.05);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #downloadLinks {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .download-link {
+            display: block;
+            margin: 5px 0;
+            color: #2196F3;
+            text-decoration: none;
+        }
+        
+        .download-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generator kart do talii PAO</h1>
+    
+    <div class="controls">
+        <button onclick="generateAllCards()">Generuj wszystkie karty</button>
+        <button onclick="downloadAllCards()">Pobierz wszystkie jako SVG</button>
+        <div id="status"></div>
+    </div>
+    
+    <div id="cardsContainer" class="cards-container"></div>
+    <div id="downloadLinks" class="hidden"></div>
+    
+    <script>
+        const suits = {
+            'S': { symbol: '♠', color: 'black', name: 'spades' },
+            'H': { symbol: '♥', color: 'red', name: 'hearts' },
+            'D': { symbol: '♦', color: 'red', name: 'diamonds' },
+            'C': { symbol: '♣', color: 'black', name: 'clubs' }
+        };
+        
+        const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+        
+        function createCardSVG(value, suitCode) {
+            const suit = suits[suitCode];
+            const color = suit.color;
+            const symbol = suit.symbol;
+            
+            // Dostosowanie rozmiaru symbolu dla figur
+            const isCourtCard = ['J', 'Q', 'K'].includes(value);
+            const centerFontSize = isCourtCard ? 80 : (value === '10' ? 60 : 70);
+            
+            const svg = `
+                <svg width="150" height="210" viewBox="0 0 150 210" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Tło karty -->
+                    <rect width="150" height="210" rx="10" fill="white" stroke="#333" stroke-width="2"/>
+                    
+                    <!-- Górny lewy róg -->
+                    <text x="15" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" 
+                          fill="${color}" text-anchor="middle">${value}</text>
+                    <text x="15" y="55" font-family="Arial, sans-serif" font-size="24" 
+                          fill="${color}" text-anchor="middle">${symbol}</text>
+                    
+                    <!-- Dolny prawy róg (obrócony) -->
+                    <g transform="rotate(180 135 175)">
+                        <text x="135" y="175" font-family="Arial, sans-serif" font-size="24" font-weight="bold" 
+                              fill="${color}" text-anchor="middle">${value}</text>
+                        <text x="135" y="195" font-family="Arial, sans-serif" font-size="24" 
+                              fill="${color}" text-anchor="middle">${symbol}</text>
+                    </g>
+                    
+                    <!-- Centralny symbol -->
+                    <text x="75" y="120" font-family="Arial, sans-serif" font-size="${centerFontSize}" 
+                          fill="${color}" text-anchor="middle" dominant-baseline="middle">${symbol}</text>
+                </svg>
+            `;
+            
+            return svg.trim();
+        }
+        
+        function generateAllCards() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
+            
+            for (const suitCode of Object.keys(suits)) {
+                for (const value of values) {
+                    const cardWrapper = document.createElement('div');
+                    cardWrapper.className = 'card-wrapper';
+                    
+                    const svgString = createCardSVG(value, suitCode);
+                    cardWrapper.innerHTML = svgString;
+                    
+                    const label = document.createElement('p');
+                    label.textContent = `${value}${suitCode}`;
+                    label.style.margin = '5px 0';
+                    cardWrapper.appendChild(label);
+                    
+                    container.appendChild(cardWrapper);
+                }
+            }
+            
+            document.getElementById('status').textContent = 'Wygenerowano 52 karty!';
+        }
+        
+        function downloadAllCards() {
+            const downloadLinks = document.getElementById('downloadLinks');
+            downloadLinks.innerHTML = '<h3>Linki do pobrania:</h3>';
+            downloadLinks.classList.remove('hidden');
+            
+            for (const suitCode of Object.keys(suits)) {
+                for (const value of values) {
+                    const svgString = createCardSVG(value, suitCode);
+                    const blob = new Blob([svgString], { type: 'image/svg+xml' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${value}${suitCode}.svg`;
+                    link.textContent = `${value}${suitCode}.svg`;
+                    link.className = 'download-link';
+                    
+                    downloadLinks.appendChild(link);
+                }
+            }
+            
+            // Automatycznie generuj karty dla użytkownika
+            generateAndSaveCards();
+        }
+        
+        async function generateAndSaveCards() {
+            // Ta funkcja tworzy obiekt z wszystkimi kartami
+            const cards = {};
+            
+            for (const suitCode of Object.keys(suits)) {
+                for (const value of values) {
+                    const cardId = `${value}${suitCode}`;
+                    cards[cardId] = createCardSVG(value, suitCode);
+                }
+            }
+            
+            // Zapisz do konsoli dla łatwego skopiowania
+            console.log('Wszystkie karty SVG:', cards);
+            
+            // Utwórz pojedynczy plik ze wszystkimi kartami
+            const allCardsScript = `// Wszystkie karty SVG dla Anki PAO
+const cardSVGs = ${JSON.stringify(cards, null, 2)};
+
+// Funkcja pomocnicza do pobrania SVG karty
+function getCardSVG(cardId) {
+    return cardSVGs[cardId] || '';
+}`;
+            
+            const blob = new Blob([allCardsScript], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'all-cards-svg.js';
+            link.textContent = 'Pobierz wszystkie karty jako jeden plik JS';
+            link.style.display = 'block';
+            link.style.marginTop = '20px';
+            link.style.fontWeight = 'bold';
+            
+            document.getElementById('downloadLinks').prepend(link);
+        }
+        
+        // Generuj karty przy załadowaniu strony
+        window.onload = generateAllCards;
+    </script>
+</body>
+</html>

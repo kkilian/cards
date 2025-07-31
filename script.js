@@ -14,6 +14,10 @@ let isRunning = false;
 let cardsToShow = 10;
 let shownCardsHistory = [];
 
+// Session tracking
+let currentSession = null;
+let sessions = [];
+
 const cardElement = document.getElementById('card');
 const cardValueElement = document.getElementById('card-value');
 const cardSuitElement = document.getElementById('card-suit');
@@ -98,6 +102,12 @@ function getNextCard() {
     cardsShown++;
     cardsShownSpan.textContent = cardsShown;
     shownCardsHistory.push(card);
+    
+    // Add card to current session
+    if (currentSession) {
+        currentSession.cards.push(card);
+    }
+    
     return card;
 }
 
@@ -109,8 +119,20 @@ function startCardShow() {
     }
     
     if (deck.length === 0) {
-        resetDeck(true);
+        resetDeck();
     }
+    
+    // Start new session
+    currentSession = {
+        id: Date.now(),
+        startTime: new Date(),
+        endTime: null,
+        cardsShown: 0,
+        interval: parseFloat(intervalSlider.value),
+        selectedSuits: [...selectedSuits],
+        totalCards: cardsToShow,
+        cards: []
+    };
     
     isRunning = true;
     startBtn.disabled = true;
@@ -143,20 +165,26 @@ function stopCardShow() {
         currentInterval = null;
     }
     
+    // Save session if it exists and has shown cards
+    if (currentSession && cardsShown > 0) {
+        currentSession.endTime = new Date();
+        currentSession.cardsShown = cardsShown;
+        saveSession(currentSession);
+        currentSession = null;
+    }
+    
     startBtn.disabled = false;
     stopBtn.disabled = true;
     intervalSlider.disabled = false;
     cardsCountSlider.disabled = false;
 }
 
-function resetDeck(preserveHistory = false) {
+function resetDeck() {
     stopCardShow();
     createDeck();
     shuffleDeck();
     cardsShown = 0;
-    if (!preserveHistory) {
-        shownCardsHistory = [];
-    }
+    shownCardsHistory = [];
     cardsShownSpan.textContent = cardsShown;
     cardElement.classList.add('hidden');
     cardElement.classList.remove('show');
@@ -268,7 +296,7 @@ cardsCountSlider.addEventListener('input', (e) => {
 
 startBtn.addEventListener('click', startCardShow);
 stopBtn.addEventListener('click', stopCardShow);
-resetBtn.addEventListener('click', () => resetDeck(false));
+resetBtn.addEventListener('click', resetDeck);
 showHistoryBtn.addEventListener('click', showHistory);
 prevBtn.addEventListener('click', showPreviousCard);
 nextBtn.addEventListener('click', showNextCard);
@@ -287,10 +315,162 @@ suitCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
         updateMaxCards();
         if (deck.length > 0) {
-            resetDeck(false);
+            resetDeck();
         }
     });
 });
 
-resetDeck(false);
+// Session management functions
+function saveSession(session) {
+    sessions.unshift(session); // Add to beginning
+    // Keep only last 20 sessions
+    if (sessions.length > 20) {
+        sessions = sessions.slice(0, 20);
+    }
+    saveSessions();
+    updateSessionsList();
+}
+
+function saveSessions() {
+    localStorage.setItem('cardSessions', JSON.stringify(sessions));
+    localStorage.setItem('completedSessions', JSON.stringify(getCompletedSessions()));
+}
+
+function loadSessions() {
+    const saved = localStorage.getItem('cardSessions');
+    if (saved) {
+        sessions = JSON.parse(saved);
+    }
+    updateSessionsList();
+}
+
+function getCompletedSessions() {
+    const completed = localStorage.getItem('completedSessions');
+    return completed ? JSON.parse(completed) : [];
+}
+
+function toggleSessionCompletion(sessionId) {
+    const completedSessions = getCompletedSessions();
+    const index = completedSessions.indexOf(sessionId);
+    
+    if (index === -1) {
+        completedSessions.push(sessionId);
+    } else {
+        completedSessions.splice(index, 1);
+    }
+    
+    localStorage.setItem('completedSessions', JSON.stringify(completedSessions));
+    updateSessionsList();
+}
+
+function updateSessionsList() {
+    const sessionsList = document.getElementById('sessions-list');
+    const completedSessions = getCompletedSessions();
+    
+    sessionsList.innerHTML = '';
+    
+    sessions.forEach((session, index) => {
+        const sessionItem = document.createElement('div');
+        sessionItem.className = 'session-item';
+        if (completedSessions.includes(session.id)) {
+            sessionItem.classList.add('completed');
+        }
+        
+        const date = new Date(session.startTime);
+        const dateStr = date.toLocaleDateString('pl-PL', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        sessionItem.innerHTML = `
+            <div class="session-date">${dateStr}</div>
+            <div class="session-info">
+                <span class="session-cards">Karty: ${session.cardsShown}/${session.totalCards}</span>
+                <span class="session-interval">${session.interval}s</span>
+            </div>
+            <div class="session-completion">
+                <input type="checkbox" 
+                       class="completion-checkbox" 
+                       id="session-${session.id}"
+                       ${completedSessions.includes(session.id) ? 'checked' : ''}
+                       onclick="toggleSessionCompletion(${session.id})">
+                <label for="session-${session.id}" class="completion-label">Udało się!</label>
+            </div>
+        `;
+        
+        sessionsList.appendChild(sessionItem);
+    });
+}
+
+// Export functions
+function exportSessions(count) {
+    const sessionsToExport = sessions.slice(0, count);
+    
+    if (sessionsToExport.length === 0) {
+        alert('Brak sesji do eksportu!');
+        return;
+    }
+    
+    const exportData = {
+        exportDate: new Date().toISOString(),
+        sessionCount: sessionsToExport.length,
+        sessions: sessionsToExport.map((session, index) => ({
+            sessionNumber: index + 1,
+            startTime: session.startTime,
+            endTime: session.endTime,
+            cardsShown: session.cardsShown,
+            totalCards: session.totalCards,
+            interval: session.interval,
+            selectedSuits: session.selectedSuits,
+            cards: session.cards
+        }))
+    };
+    
+    const jsonString = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const filename = `card-sessions-last-${count}-${timestamp}.json`;
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+    
+    // Close the export modal
+    document.getElementById('export-modal').classList.add('hidden');
+}
+
+// Export modal functionality
+const exportSessionsBtn = document.getElementById('export-sessions-btn');
+const exportModal = document.getElementById('export-modal');
+const exportCloseBtn = document.querySelector('.export-close');
+
+if (exportSessionsBtn) {
+    exportSessionsBtn.addEventListener('click', () => {
+        exportModal.classList.remove('hidden');
+    });
+}
+
+if (exportCloseBtn) {
+    exportCloseBtn.addEventListener('click', () => {
+        exportModal.classList.add('hidden');
+    });
+}
+
+exportModal.addEventListener('click', (e) => {
+    if (e.target === exportModal) {
+        exportModal.classList.add('hidden');
+    }
+});
+
+// Initialize
+resetDeck();
 updateMaxCards();
+loadSessions();
