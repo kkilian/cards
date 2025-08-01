@@ -584,8 +584,9 @@ function deleteSession(index) {
             } else {
                 // Refresh chart with current filter settings
                 const fullDeckFilter = document.getElementById('full-deck-filter');
-                const sessionLengthSlider = document.getElementById('session-length-slider');
-                showProgressChart(fullDeckFilter.checked, parseInt(sessionLengthSlider.value));
+                const minSlider = document.getElementById('session-length-min-slider');
+                const maxSlider = document.getElementById('session-length-max-slider');
+                showProgressChart(fullDeckFilter.checked, parseInt(minSlider.value), parseInt(maxSlider.value));
             }
         }
     }
@@ -771,7 +772,7 @@ function renderSessionChart() {
     });
 }
 
-function showProgressChart(onlyFullDecks = false, maxCards = 52) {
+function showProgressChart(onlyFullDecks = false, minCards = 1, maxCards = 52) {
     if (sessions.length === 0) {
         alert('Brak sesji do wyświetlenia');
         return;
@@ -780,8 +781,10 @@ function showProgressChart(onlyFullDecks = false, maxCards = 52) {
     // Filter sessions if needed
     let filteredSessions = sessions;
     
-    // Apply max cards filter
-    filteredSessions = filteredSessions.filter(session => session.totalCards <= maxCards);
+    // Apply min and max cards filter
+    filteredSessions = filteredSessions.filter(session => 
+        session.totalCards >= minCards && session.totalCards <= maxCards
+    );
     
     // Apply full deck filter if enabled
     if (onlyFullDecks) {
@@ -789,7 +792,7 @@ function showProgressChart(onlyFullDecks = false, maxCards = 52) {
     }
     
     if (filteredSessions.length === 0) {
-        alert(`Brak sesji spełniających kryteria filtrowania`);
+        alert(`Brak sesji spełniających kryteria filtrowania (${minCards}-${maxCards} kart)`);
         return;
     }
     
@@ -1014,8 +1017,9 @@ exportAllBtn.addEventListener('click', exportAllSessions);
 resetHistoryBtn.addEventListener('click', resetHistory);
 showChartBtn.addEventListener('click', () => {
     const fullDeckFilter = document.getElementById('full-deck-filter');
-    const sessionLengthSlider = document.getElementById('session-length-slider');
-    showProgressChart(fullDeckFilter.checked, parseInt(sessionLengthSlider.value));
+    const minSlider = document.getElementById('session-length-min-slider');
+    const maxSlider = document.getElementById('session-length-max-slider');
+    showProgressChart(fullDeckFilter.checked, parseInt(minSlider.value), parseInt(maxSlider.value));
 });
 closeChartBtn.addEventListener('click', closeChart);
 
@@ -1135,22 +1139,51 @@ loadFocusModePreference();
 // Add event listener for full deck filter checkbox
 document.addEventListener('DOMContentLoaded', () => {
     const fullDeckFilter = document.getElementById('full-deck-filter');
-    const sessionLengthSlider = document.getElementById('session-length-slider');
-    const sessionLengthValue = document.getElementById('session-length-value');
+    const minSlider = document.getElementById('session-length-min-slider');
+    const maxSlider = document.getElementById('session-length-max-slider');
+    const minValue = document.getElementById('session-length-min-value');
+    const maxValue = document.getElementById('session-length-max-value');
     
     if (fullDeckFilter) {
         fullDeckFilter.addEventListener('change', (e) => {
             if (!chartModal.classList.contains('hidden')) {
-                showProgressChart(e.target.checked, parseInt(sessionLengthSlider.value));
+                showProgressChart(e.target.checked, parseInt(minSlider.value), parseInt(maxSlider.value));
             }
         });
     }
     
-    if (sessionLengthSlider) {
-        sessionLengthSlider.addEventListener('input', (e) => {
-            sessionLengthValue.textContent = e.target.value;
+    if (minSlider && maxSlider) {
+        minSlider.addEventListener('input', (e) => {
+            let min = parseInt(e.target.value);
+            let max = parseInt(maxSlider.value);
+            
+            // Ensure min doesn't exceed max
+            if (min > max) {
+                maxSlider.value = min;
+                maxValue.textContent = min;
+            }
+            
+            minValue.textContent = min;
+            
             if (!chartModal.classList.contains('hidden')) {
-                showProgressChart(fullDeckFilter.checked, parseInt(e.target.value));
+                showProgressChart(fullDeckFilter.checked, min, Math.max(min, max));
+            }
+        });
+        
+        maxSlider.addEventListener('input', (e) => {
+            let max = parseInt(e.target.value);
+            let min = parseInt(minSlider.value);
+            
+            // Ensure max doesn't go below min
+            if (max < min) {
+                minSlider.value = max;
+                minValue.textContent = max;
+            }
+            
+            maxValue.textContent = max;
+            
+            if (!chartModal.classList.contains('hidden')) {
+                showProgressChart(fullDeckFilter.checked, Math.min(min, max), max);
             }
         });
     }

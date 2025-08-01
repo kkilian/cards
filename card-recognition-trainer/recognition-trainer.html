@@ -166,8 +166,11 @@
                         <span>Pokaż tylko pełne talie (52 karty)</span>
                     </label>
                     <div class="session-length-filter">
-                        <label for="session-length-slider">Sesje do <span id="session-length-value">52</span> kart</label>
-                        <input type="range" id="session-length-slider" min="1" max="52" value="52">
+                        <label>Sesje od <span id="session-length-min-value">1</span> do <span id="session-length-max-value">52</span> kart</label>
+                        <div class="range-sliders">
+                            <input type="range" id="session-length-min-slider" min="1" max="52" value="1" class="min-slider">
+                            <input type="range" id="session-length-max-slider" min="1" max="52" value="52" class="max-slider">
+                        </div>
                     </div>
                     <button id="close-chart-btn" class="close-chart-btn">&times;</button>
                 </div>

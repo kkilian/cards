@@ -729,7 +729,7 @@ kbd {
 
 .session-length-filter {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
     padding: 8px 16px;
     border: 1px solid #e0e0e0;
@@ -743,14 +743,56 @@ kbd {
 .session-length-filter label {
     font-size: 14px;
     white-space: nowrap;
+    text-align: center;
 }
 
-.session-length-filter input[type="range"] {
-    width: 120px;
+.range-sliders {
+    position: relative;
+    width: 200px;
+    height: 20px;
+}
+
+.range-sliders input[type="range"] {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: transparent;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.range-sliders input[type="range"]::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #000;
     cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-#session-length-value {
+.range-sliders input[type="range"]::-moz-range-thumb {
+    pointer-events: all;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #000;
+    cursor: pointer;
+    border: none;
+}
+
+.range-sliders .min-slider {
+    z-index: 2;
+}
+
+.range-sliders .max-slider {
+    z-index: 1;
+}
+
+#session-length-min-value,
+#session-length-max-value {
     font-weight: bold;
     color: #333;
 }
