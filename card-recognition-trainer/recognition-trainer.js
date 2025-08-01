@@ -405,8 +405,15 @@ document.addEventListener('keydown', (e) => {
             recordCardTime(currentCard, elapsed);
             nextCard();
         }
-    } else if (e.code === 'Escape' && isSessionActive) {
-        endSession();
+    } else if (e.code === 'Escape') {
+        if (isFocusMode && !isSessionActive) {
+            // Exit focus mode when not in session
+            focusModeToggle.checked = false;
+            toggleFocusMode();
+        } else if (isSessionActive) {
+            // End session when in session
+            endSession();
+        }
     }
 });
 
