@@ -584,7 +584,8 @@ function deleteSession(index) {
             } else {
                 // Refresh chart with current filter settings
                 const fullDeckFilter = document.getElementById('full-deck-filter');
-                showProgressChart(fullDeckFilter.checked);
+                const sessionLengthSlider = document.getElementById('session-length-slider');
+                showProgressChart(fullDeckFilter.checked, parseInt(sessionLengthSlider.value));
             }
         }
     }
@@ -770,7 +771,7 @@ function renderSessionChart() {
     });
 }
 
-function showProgressChart(onlyFullDecks = false) {
+function showProgressChart(onlyFullDecks = false, maxCards = 52) {
     if (sessions.length === 0) {
         alert('Brak sesji do wyświetlenia');
         return;
@@ -778,12 +779,18 @@ function showProgressChart(onlyFullDecks = false) {
     
     // Filter sessions if needed
     let filteredSessions = sessions;
+    
+    // Apply max cards filter
+    filteredSessions = filteredSessions.filter(session => session.totalCards <= maxCards);
+    
+    // Apply full deck filter if enabled
     if (onlyFullDecks) {
-        filteredSessions = sessions.filter(session => session.totalCards === 52);
-        if (filteredSessions.length === 0) {
-            alert('Brak sesji z pełną talią (52 karty)');
-            return;
-        }
+        filteredSessions = filteredSessions.filter(session => session.totalCards === 52);
+    }
+    
+    if (filteredSessions.length === 0) {
+        alert(`Brak sesji spełniających kryteria filtrowania`);
+        return;
     }
     
     // Extract average times in chronological order
@@ -1007,7 +1014,8 @@ exportAllBtn.addEventListener('click', exportAllSessions);
 resetHistoryBtn.addEventListener('click', resetHistory);
 showChartBtn.addEventListener('click', () => {
     const fullDeckFilter = document.getElementById('full-deck-filter');
-    showProgressChart(fullDeckFilter.checked);
+    const sessionLengthSlider = document.getElementById('session-length-slider');
+    showProgressChart(fullDeckFilter.checked, parseInt(sessionLengthSlider.value));
 });
 closeChartBtn.addEventListener('click', closeChart);
 
@@ -1127,10 +1135,22 @@ loadFocusModePreference();
 // Add event listener for full deck filter checkbox
 document.addEventListener('DOMContentLoaded', () => {
     const fullDeckFilter = document.getElementById('full-deck-filter');
+    const sessionLengthSlider = document.getElementById('session-length-slider');
+    const sessionLengthValue = document.getElementById('session-length-value');
+    
     if (fullDeckFilter) {
         fullDeckFilter.addEventListener('change', (e) => {
             if (!chartModal.classList.contains('hidden')) {
-                showProgressChart(e.target.checked);
+                showProgressChart(e.target.checked, parseInt(sessionLengthSlider.value));
+            }
+        });
+    }
+    
+    if (sessionLengthSlider) {
+        sessionLengthSlider.addEventListener('input', (e) => {
+            sessionLengthValue.textContent = e.target.value;
+            if (!chartModal.classList.contains('hidden')) {
+                showProgressChart(fullDeckFilter.checked, parseInt(e.target.value));
             }
         });
     }
