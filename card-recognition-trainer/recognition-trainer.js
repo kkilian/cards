@@ -271,6 +271,11 @@ function startSession() {
     cardsCountSlider.disabled = true;
     suitCheckboxes.forEach(cb => cb.disabled = true);
     
+    // Add session-active class for focus mode
+    if (isFocusMode) {
+        document.body.classList.add('session-active');
+    }
+    
     // Show first card
     showCard(deck[0]);
 }
@@ -307,6 +312,9 @@ function endSession() {
         saveSessions();
         renderSessionHistory();
     }
+    
+    // Remove session-active class for focus mode
+    document.body.classList.remove('session-active');
     
     // Show finish screen
     finishScreen.classList.remove('hidden');
@@ -1074,9 +1082,40 @@ window.exportSession = exportSession;
 window.exportLastSessions = exportLastSessions;
 window.deleteSession = deleteSession;
 
+// Focus mode functionality
+const focusModeToggle = document.getElementById('focus-mode-toggle');
+let isFocusMode = false;
+
+function toggleFocusMode() {
+    isFocusMode = focusModeToggle.checked;
+    
+    if (isFocusMode) {
+        document.body.classList.add('focus-mode');
+    } else {
+        document.body.classList.remove('focus-mode');
+        document.body.classList.remove('session-active');
+    }
+    
+    // Save preference
+    localStorage.setItem('focusMode', isFocusMode);
+}
+
+// Load focus mode preference
+function loadFocusModePreference() {
+    const savedFocusMode = localStorage.getItem('focusMode') === 'true';
+    focusModeToggle.checked = savedFocusMode;
+    isFocusMode = savedFocusMode;
+    if (savedFocusMode) {
+        document.body.classList.add('focus-mode');
+    }
+}
+
+focusModeToggle.addEventListener('change', toggleFocusMode);
+
 // Initialize
 updateMaxCards();
 loadSessions();
+loadFocusModePreference();
 
 // Add event listener for full deck filter checkbox
 document.addEventListener('DOMContentLoaded', () => {

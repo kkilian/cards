@@ -810,3 +810,140 @@ kbd {
         grid-template-columns: 1fr;
     }
 }
+
+/* Focus Mode Styles */
+.focus-mode-control {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.focus-mode-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.focus-mode-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Focus mode active styles */
+body.focus-mode {
+    background-color: #6b6b6b;
+    transition: background-color 0.5s ease;
+}
+
+body.focus-mode .app-wrapper {
+    height: 100vh;
+    padding: 0;
+}
+
+body.focus-mode .main-container {
+    max-width: 100%;
+    padding: 0;
+    justify-content: center;
+}
+
+body.focus-mode h1,
+body.focus-mode .stats-panel,
+body.focus-mode .controls,
+body.focus-mode .progress-container {
+    display: none;
+}
+
+body.focus-mode .card-container {
+    margin-bottom: 0;
+    flex: none;
+    height: 100vh;
+}
+
+/* Focus mode start screen */
+body.focus-mode .start-screen {
+    background-color: transparent;
+    border: none;
+    padding: 40px;
+}
+
+body.focus-mode .start-screen h2 {
+    display: none;
+}
+
+body.focus-mode .start-screen p {
+    font-size: 24px;
+    color: #ffffff;
+    margin: 0;
+}
+
+body.focus-mode .start-screen .instructions {
+    display: none;
+}
+
+/* Focus mode finish screen */
+body.focus-mode .finish-screen {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 40px;
+    backdrop-filter: blur(10px);
+}
+
+body.focus-mode .finish-screen h2 {
+    color: #ffffff;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+body.focus-mode .final-stats {
+    color: #ffffff;
+}
+
+body.focus-mode .final-stats p {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+body.focus-mode .final-stats span {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+body.focus-mode .show-chart-btn,
+body.focus-mode .export-btn {
+    display: none;
+}
+
+body.focus-mode .restart-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 18px;
+    padding: 15px 30px;
+}
+
+body.focus-mode .restart-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Show progress bar in focus mode during session */
+body.focus-mode.session-active .progress-container {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    opacity: 0.5;
+}
+
+body.focus-mode.session-active .progress-bar {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+body.focus-mode.session-active .progress-fill {
+    background-color: rgba(255, 255, 255, 0.6);
+}
