@@ -246,7 +246,7 @@ button:disabled {
 }
 
 .show-history-btn.hidden {
-    display: none;
+    display: none !important;
 }
 
 .modal {
@@ -580,4 +580,203 @@ button:disabled {
     .export-options {
         grid-template-columns: 1fr;
     }
+}
+
+/* Focus Mode Styles */
+.focus-mode-control {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #34495e;
+}
+
+.focus-mode-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.focus-mode-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Focus mode active styles */
+body.focus-mode {
+    background-color: #6b6b6b;
+    transition: background-color 0.5s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body.focus-mode .container {
+    height: 100vh;
+    padding: 0;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+body.focus-mode h1 {
+    display: none;
+}
+
+/* In focus mode, show only essential controls before session starts */
+body.focus-mode .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    min-width: 400px;
+    max-width: 90vw;
+}
+
+/* Hide non-essential controls in focus mode */
+body.focus-mode .focus-mode-control,
+body.focus-mode .info {
+    display: none;
+}
+
+/* Always hide show-history-btn in focus mode by default */
+body.focus-mode .show-history-btn {
+    display: none !important;
+}
+
+/* Hide all controls during active session in focus mode */
+body.focus-mode.session-active .controls {
+    display: none;
+}
+
+/* Style control elements in focus mode */
+body.focus-mode .control-group {
+    margin-bottom: 15px;
+}
+
+body.focus-mode .control-group label {
+    color: #ffffff;
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+body.focus-mode .suits-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+body.focus-mode .suit-checkbox {
+    margin: 0 !important;
+}
+
+body.focus-mode .suit-label {
+    color: #ffffff !important;
+    font-size: 14px;
+}
+
+body.focus-mode .button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+body.focus-mode .button-group button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+body.focus-mode .button-group button:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+body.focus-mode .button-group button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive design for focus mode */
+@media (max-width: 768px) {
+    body.focus-mode .controls {
+        min-width: 320px;
+        padding: 30px 20px;
+        gap: 15px;
+    }
+    
+    body.focus-mode .suits-checkboxes {
+        gap: 8px;
+    }
+    
+    body.focus-mode .suit-label {
+        font-size: 12px !important;
+    }
+    
+    body.focus-mode .button-group button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+}
+
+body.focus-mode .card-container {
+    margin-bottom: 0;
+    flex: 1;
+    height: auto;
+}
+
+/* Show info only during active session in focus mode */
+body.focus-mode.session-active .info {
+    display: block !important;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.7;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+/* Show history button only when session is finished and button is not hidden */
+body.focus-mode .show-history-btn.visible-after-session {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    position: fixed !important;
+    bottom: 50px;
+    left: 50% !important;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 18px;
+    padding: 15px 30px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+body.focus-mode .show-history-btn.visible-after-session:hover {
+    background-color: rgba(255, 255, 255, 0.3);
 }
