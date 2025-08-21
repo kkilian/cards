@@ -796,8 +796,9 @@ function showProgressChart(onlyFullDecks = false, minCards = 1, maxCards = 52) {
         return;
     }
     
-    // Extract average times in chronological order
-    const averageTimes = filteredSessions.slice().reverse().map(session => session.averageTime);
+    // Extract average times in chronological order (reversing to show oldest first)
+    const reversedSessions = filteredSessions.slice().reverse();
+    const averageTimes = reversedSessions.map(session => session.averageTime);
     const sessionNumbers = Array.from({length: averageTimes.length}, (_, i) => i);
     
     // Prepare colors based on time values
@@ -891,7 +892,34 @@ function showProgressChart(onlyFullDecks = false, minCards = 1, maxCards = 52) {
                             if (context.dataset.label === 'Linia trendu') {
                                 return `Trend: ${context.parsed.y.toFixed(2)}s`;
                             }
-                            return `Średni czas: ${context.parsed.y.toFixed(2)}s`;
+                            
+                            // Get the session data for this bar
+                            const session = reversedSessions[context.dataIndex];
+                            
+                            // Format date
+                            const date = new Date(session.date);
+                            const dateStr = date.toLocaleDateString('pl-PL', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                            const timeStr = date.toLocaleTimeString('pl-PL', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                            
+                            // Return array of lines for the tooltip
+                            return [
+                                `Data: ${dateStr} ${timeStr}`,
+                                `Karty: ${session.cards.length}/${session.totalCards}`,
+                                `Średni czas: ${session.averageTime}s`,
+                                `Najlepszy: ${session.bestTime}s`,
+                                `Najgorszy: ${session.worstTime}s`,
+                                `Łączny czas: ${session.totalTime ? session.totalTime.toFixed(2) : (session.cards.length * session.averageTime).toFixed(2)}s`
+                            ];
+                        },
+                        title: function(tooltipItems) {
+                            return `Sesja ${tooltipItems[0].dataIndex + 1}`;
                         }
                     }
                 },
