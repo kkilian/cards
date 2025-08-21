@@ -408,12 +408,17 @@ document.addEventListener('keydown', (e) => {
     } else if (e.code === 'Escape') {
         if (isFocusMode && !isSessionActive) {
             // Exit focus mode when not in session
-            focusModeToggle.checked = false;
+            isFocusMode = false;
             toggleFocusMode();
         } else if (isSessionActive) {
             // End session when in session
             endSession();
         }
+    } else if (e.code === 'KeyF') {
+        // Toggle focus mode with F key
+        e.preventDefault();
+        isFocusMode = !isFocusMode;
+        toggleFocusMode();
     }
 });
 
@@ -1130,12 +1135,9 @@ window.exportLastSessions = exportLastSessions;
 window.deleteSession = deleteSession;
 
 // Focus mode functionality
-const focusModeToggle = document.getElementById('focus-mode-toggle');
 let isFocusMode = false;
 
 function toggleFocusMode() {
-    isFocusMode = focusModeToggle.checked;
-    
     if (isFocusMode) {
         document.body.classList.add('focus-mode');
     } else {
@@ -1150,14 +1152,11 @@ function toggleFocusMode() {
 // Load focus mode preference
 function loadFocusModePreference() {
     const savedFocusMode = localStorage.getItem('focusMode') === 'true';
-    focusModeToggle.checked = savedFocusMode;
     isFocusMode = savedFocusMode;
     if (savedFocusMode) {
         document.body.classList.add('focus-mode');
     }
 }
-
-focusModeToggle.addEventListener('change', toggleFocusMode);
 
 // Initialize
 updateMaxCards();
