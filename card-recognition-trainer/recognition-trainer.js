@@ -301,13 +301,17 @@ function endSession() {
         finalBestElement.textContent = best.toFixed(2);
         finalWorstElement.textContent = worst.toFixed(2);
         
+        // Calculate suit statistics
+        const suitStats = calculateSuitStatistics(sessionData.cards);
+        
         // Save session to history
         sessions.unshift({
             ...sessionData,
             totalTime: parseFloat(total.toFixed(2)),
             averageTime: parseFloat(average.toFixed(2)),
             bestTime: parseFloat(best.toFixed(2)),
-            worstTime: parseFloat(worst.toFixed(2))
+            worstTime: parseFloat(worst.toFixed(2)),
+            suitStats: suitStats
         });
         saveSessions();
         renderSessionHistory();
@@ -462,6 +466,16 @@ function renderSessionHistory() {
             minute: '2-digit'
         });
         
+        // Get suit statistics - calculate if not present (for legacy sessions)
+        const suitStats = session.suitStats || calculateSuitStatistics(session.cards);
+        
+        // Format suit distribution display
+        const suitDisplay = ['♠', '♥', '♦', '♣'].map(suit => {
+            const count = suitStats.counts[suit];
+            const suitClass = (suit === '♥' || suit === '♦') ? 'red' : 'black';
+            return count > 0 ? `<span class="${suitClass}">${suit}${count}</span>` : '';
+        }).filter(s => s).join(' ');
+        
         return `
             <div class="session-item">
                 <div class="session-header">
@@ -472,6 +486,10 @@ function renderSessionHistory() {
                     <div class="session-stat">
                         <span>Karty:</span>
                         <span>${session.cards.length}/${session.totalCards}</span>
+                    </div>
+                    <div class="session-stat">
+                        <span>Symbole:</span>
+                        <span class="suit-distribution">${suitDisplay}</span>
                     </div>
                     <div class="session-stat">
                         <span>Łączny czas:</span>
@@ -591,7 +609,8 @@ function deleteSession(index) {
                 const fullDeckFilter = document.getElementById('full-deck-filter');
                 const minSlider = document.getElementById('session-length-min-slider');
                 const maxSlider = document.getElementById('session-length-max-slider');
-                showProgressChart(fullDeckFilter.checked, parseInt(minSlider.value), parseInt(maxSlider.value));
+                const todayFilter = document.getElementById('today-sessions-filter');
+                showProgressChart(fullDeckFilter.checked, parseInt(minSlider.value), parseInt(maxSlider.value), todayFilter && todayFilter.checked, getSelectedChartSuits());
             }
         }
     }
@@ -683,6 +702,40 @@ function polynomialRegression(x, y, degree) {
     }
     
     return coefficients;
+}
+
+// Calculate suit statistics from cards array
+function calculateSuitStatistics(cards) {
+    const suitCounts = {
+        '♠': 0,
+        '♥': 0,
+        '♦': 0,
+        '♣': 0
+    };
+    
+    // Count cards for each suit
+    cards.forEach(card => {
+        if (card.suit && suitCounts.hasOwnProperty(card.suit)) {
+            suitCounts[card.suit]++;
+        }
+    });
+    
+    // Calculate total cards
+    const totalCards = cards.length;
+    
+    // Calculate percentages
+    const suitPercentages = {};
+    for (const suit in suitCounts) {
+        suitPercentages[suit] = totalCards > 0 
+            ? Math.round((suitCounts[suit] / totalCards) * 100) 
+            : 0;
+    }
+    
+    return {
+        counts: suitCounts,
+        percentages: suitPercentages,
+        total: totalCards
+    };
 }
 
 function renderSessionChart() {
@@ -777,7 +830,27 @@ function renderSessionChart() {
     });
 }
 
-function showProgressChart(onlyFullDecks = false, minCards = 1, maxCards = 52) {
+// Helper function to get selected suits from chart filters
+function getSelectedChartSuits() {
+    const suits = [];
+    const checkboxes = [
+        { id: 'chart-filter-spades', value: '♠' },
+        { id: 'chart-filter-hearts', value: '♥' },
+        { id: 'chart-filter-diamonds', value: '♦' },
+        { id: 'chart-filter-clubs', value: '♣' }
+    ];
+    
+    checkboxes.forEach(checkbox => {
+        const element = document.getElementById(checkbox.id);
+        if (element && element.checked) {
+            suits.push(checkbox.value);
+        }
+    });
+    
+    return suits;
+}
+
+function showProgressChart(onlyFullDecks = false, minCards = 1, maxCards = 52, onlyToday = false, selectedSuits = null) {
     if (sessions.length === 0) {
         alert('Brak sesji do wyświetlenia');
         return;
@@ -785,6 +858,30 @@ function showProgressChart(onlyFullDecks = false, minCards = 1, maxCards = 52) {
     
     // Filter sessions if needed
     let filteredSessions = sessions;
+    
+    // Filter today's sessions if enabled
+    if (onlyToday) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        filteredSessions = filteredSessions.filter(session => {
+            const sessionDate = new Date(session.date);
+            return sessionDate >= today && sessionDate < tomorrow;
+        });
+    }
+    
+    // Filter by selected suits if provided
+    if (selectedSuits && selectedSuits.length > 0 && selectedSuits.length < 4) {
+        filteredSessions = filteredSessions.filter(session => {
+            if (!session.cards || session.cards.length === 0) return false;
+            
+            // Check if session contains only cards from selected suits
+            const sessionSuits = new Set(session.cards.map(card => card.suit));
+            return Array.from(sessionSuits).every(suit => selectedSuits.includes(suit));
+        });
+    }
     
     // Apply min and max cards filter
     filteredSessions = filteredSessions.filter(session => 
@@ -797,7 +894,11 @@ function showProgressChart(onlyFullDecks = false, minCards = 1, maxCards = 52) {
     }
     
     if (filteredSessions.length === 0) {
-        alert(`Brak sesji spełniających kryteria filtrowania (${minCards}-${maxCards} kart)`);
+        if (onlyToday) {
+            alert('Brak sesji z dzisiejszego dnia');
+        } else {
+            alert(`Brak sesji spełniających kryteria filtrowania (${minCards}-${maxCards} kart)`);
+        }
         return;
     }
     
@@ -913,10 +1014,18 @@ function showProgressChart(onlyFullDecks = false, minCards = 1, maxCards = 52) {
                                 minute: '2-digit'
                             });
                             
+                            // Get suit statistics
+                            const suitStats = session.suitStats || calculateSuitStatistics(session.cards);
+                            const suitDisplay = ['♠', '♥', '♦', '♣']
+                                .map(suit => suitStats.counts[suit] > 0 ? `${suit}${suitStats.counts[suit]}` : '')
+                                .filter(s => s)
+                                .join(' ');
+                            
                             // Return array of lines for the tooltip
                             return [
                                 `Data: ${dateStr} ${timeStr}`,
                                 `Karty: ${session.cards.length}/${session.totalCards}`,
+                                `Symbole: ${suitDisplay}`,
                                 `Średni czas: ${session.averageTime}s`,
                                 `Najlepszy: ${session.bestTime}s`,
                                 `Najgorszy: ${session.worstTime}s`,
@@ -1050,10 +1159,14 @@ exportAllBtn.addEventListener('click', exportAllSessions);
 resetHistoryBtn.addEventListener('click', resetHistory);
 showChartBtn.addEventListener('click', () => {
     const fullDeckFilter = document.getElementById('full-deck-filter');
+    const todayFilter = document.getElementById('today-sessions-filter');
     const minSlider = document.getElementById('session-length-min-slider');
     const maxSlider = document.getElementById('session-length-max-slider');
-    showProgressChart(fullDeckFilter.checked, parseInt(minSlider.value), parseInt(maxSlider.value));
+    showProgressChart(fullDeckFilter.checked, parseInt(minSlider.value), parseInt(maxSlider.value), todayFilter && todayFilter.checked, getSelectedChartSuits());
 });
+
+// No longer needed - handled by checkbox event listener
+
 closeChartBtn.addEventListener('click', closeChart);
 
 // Close modal when clicking outside
@@ -1166,15 +1279,38 @@ loadFocusModePreference();
 // Add event listener for full deck filter checkbox
 document.addEventListener('DOMContentLoaded', () => {
     const fullDeckFilter = document.getElementById('full-deck-filter');
+    const todayFilter = document.getElementById('today-sessions-filter');
     const minSlider = document.getElementById('session-length-min-slider');
     const maxSlider = document.getElementById('session-length-max-slider');
     const minValue = document.getElementById('session-length-min-value');
     const maxValue = document.getElementById('session-length-max-value');
     
+    // Add event listener for today sessions filter
+    if (todayFilter) {
+        todayFilter.addEventListener('change', () => {
+            if (!chartModal.classList.contains('hidden')) {
+                showProgressChart(fullDeckFilter.checked, parseInt(minSlider.value), parseInt(maxSlider.value), todayFilter.checked, getSelectedChartSuits());
+            }
+        });
+    }
+    
+    // Add event listeners for suit filter checkboxes
+    const suitCheckboxes = ['chart-filter-spades', 'chart-filter-hearts', 'chart-filter-diamonds', 'chart-filter-clubs'];
+    suitCheckboxes.forEach(checkboxId => {
+        const checkbox = document.getElementById(checkboxId);
+        if (checkbox) {
+            checkbox.addEventListener('change', () => {
+                if (!chartModal.classList.contains('hidden')) {
+                    showProgressChart(fullDeckFilter.checked, parseInt(minSlider.value), parseInt(maxSlider.value), todayFilter.checked, getSelectedChartSuits());
+                }
+            });
+        }
+    });
+    
     if (fullDeckFilter) {
         fullDeckFilter.addEventListener('change', (e) => {
             if (!chartModal.classList.contains('hidden')) {
-                showProgressChart(e.target.checked, parseInt(minSlider.value), parseInt(maxSlider.value));
+                showProgressChart(e.target.checked, parseInt(minSlider.value), parseInt(maxSlider.value), todayFilter.checked, getSelectedChartSuits());
             }
         });
     }
@@ -1193,7 +1329,7 @@ document.addEventListener('DOMContentLoaded', () => {
             minValue.textContent = min;
             
             if (!chartModal.classList.contains('hidden')) {
-                showProgressChart(fullDeckFilter.checked, min, Math.max(min, max));
+                showProgressChart(fullDeckFilter.checked, min, Math.max(min, max), todayFilter.checked, getSelectedChartSuits());
             }
         });
         
@@ -1210,7 +1346,7 @@ document.addEventListener('DOMContentLoaded', () => {
             maxValue.textContent = max;
             
             if (!chartModal.classList.contains('hidden')) {
-                showProgressChart(fullDeckFilter.checked, Math.min(min, max), max);
+                showProgressChart(fullDeckFilter.checked, Math.min(min, max), max, todayFilter.checked, getSelectedChartSuits());
             }
         });
     }

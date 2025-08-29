@@ -17,7 +17,7 @@ body {
 .app-wrapper {
     display: flex;
     gap: 40px;
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     height: calc(100vh - 40px);
 }
@@ -321,7 +321,7 @@ button:hover {
 
 /* Stats panel */
 .stats-panel {
-    width: 400px;
+    width: 600px;
     background-color: #f8f8f8;
     padding: 40px;
     display: flex;
@@ -631,6 +631,22 @@ kbd {
     font-weight: 500;
 }
 
+/* Suit distribution styles */
+.suit-distribution {
+    display: inline-flex;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.suit-distribution .red {
+    color: #e74c3c;
+}
+
+.suit-distribution .black {
+    color: #2c3e50;
+}
+
 .session-actions {
     display: flex;
     gap: 10px;
@@ -720,6 +736,49 @@ kbd {
     display: flex;
     align-items: center;
     gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Chart suit filters */
+.chart-suits-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-label {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.suit-filter-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.suit-filter-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.suit-filter-checkbox .suit-label {
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.suit-filter-checkbox .suit-label.red {
+    color: #e74c3c;
+}
+
+.suit-filter-checkbox .suit-label.black {
+    color: #2c3e50;
 }
 
 .chart-checkbox {
@@ -984,9 +1043,21 @@ body.focus-mode .final-stats span {
     font-weight: bold;
 }
 
-body.focus-mode .show-chart-btn,
 body.focus-mode .export-btn {
     display: none;
+}
+
+body.focus-mode .show-chart-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 16px;
+    padding: 12px 25px;
+}
+
+body.focus-mode .show-chart-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
 }
 
 body.focus-mode .restart-btn {
@@ -1018,4 +1089,15 @@ body.focus-mode.session-active .progress-bar {
 
 body.focus-mode.session-active .progress-fill {
     background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Chart modal in focus mode */
+body.focus-mode .chart-modal {
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+body.focus-mode #session-chart-modal {
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, 0.9);
 }

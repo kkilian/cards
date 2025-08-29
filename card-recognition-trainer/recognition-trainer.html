@@ -157,9 +157,32 @@
                 <h2>Postęp w rozpoznawaniu kart - średni czas na kartę w każdej sesji</h2>
                 <div class="chart-controls">
                     <label class="chart-checkbox">
+                        <input type="checkbox" id="today-sessions-filter">
+                        <span>Pokaż tylko sesje z dziś</span>
+                    </label>
+                    <label class="chart-checkbox">
                         <input type="checkbox" id="full-deck-filter">
                         <span>Pokaż tylko pełne talie (52 karty)</span>
                     </label>
+                    <div class="chart-suits-filter">
+                        <span class="filter-label">Filtruj kolory:</span>
+                        <label class="suit-filter-checkbox">
+                            <input type="checkbox" id="chart-filter-spades" value="♠" checked>
+                            <span class="suit-label black">♠</span>
+                        </label>
+                        <label class="suit-filter-checkbox">
+                            <input type="checkbox" id="chart-filter-hearts" value="♥" checked>
+                            <span class="suit-label red">♥</span>
+                        </label>
+                        <label class="suit-filter-checkbox">
+                            <input type="checkbox" id="chart-filter-diamonds" value="♦" checked>
+                            <span class="suit-label red">♦</span>
+                        </label>
+                        <label class="suit-filter-checkbox">
+                            <input type="checkbox" id="chart-filter-clubs" value="♣" checked>
+                            <span class="suit-label black">♣</span>
+                        </label>
+                    </div>
                     <div class="session-length-filter">
                         <label>Sesje od <span id="session-length-min-value">1</span> do <span id="session-length-max-value">52</span> kart</label>
                         <div class="range-sliders">
