@@ -92,15 +92,38 @@ function getSelectedSuits() {
     return selectedSuits;
 }
 
-function createDeck() {
+function createDeck(targetCount = null) {
     deck = [];
     const selectedSuits = getSelectedSuits();
     
+    // Create base deck
+    const baseDeck = [];
     for (const suit of selectedSuits) {
         for (const value of values) {
-            deck.push({ suit, value });
+            baseDeck.push({ suit, value });
         }
     }
+    
+    // If no target count specified, just use base deck
+    if (!targetCount || targetCount <= baseDeck.length) {
+        deck = [...baseDeck];
+        return;
+    }
+    
+    // For marathon mode (>52 cards), repeat and shuffle cards
+    deck = [];
+    while (deck.length < targetCount) {
+        // Shuffle a copy of base deck and add it
+        const shuffledCopy = [...baseDeck];
+        for (let i = shuffledCopy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledCopy[i], shuffledCopy[j]] = [shuffledCopy[j], shuffledCopy[i]];
+        }
+        deck.push(...shuffledCopy);
+    }
+    
+    // Trim to exact target count
+    deck = deck.slice(0, targetCount);
 }
 
 function shuffleDeck() {
@@ -219,10 +242,17 @@ function nextCard() {
     currentCardNumber.textContent = currentCardIndex;
     updateProgressBar();
     
-    if (currentCardIndex < sessionData.totalCards && currentCardIndex < deck.length) {
-        setTimeout(() => {
-            showCard(deck[currentCardIndex]);
-        }, 300); // Short delay between cards
+    if (currentCardIndex < sessionData.totalCards) {
+        // Ensure we have a card to show (should always be true with new createDeck logic)
+        if (currentCardIndex < deck.length) {
+            setTimeout(() => {
+                showCard(deck[currentCardIndex]);
+            }, 300); // Short delay between cards
+        } else {
+            // This should not happen with the new deck creation logic
+            console.error('Deck exhausted before reaching target cards');
+            endSession();
+        }
     } else {
         endSession();
     }
@@ -236,7 +266,8 @@ function startSession() {
     }
     
     // Initialize session
-    createDeck();
+    const targetCards = parseInt(cardsCountSlider.value);
+    createDeck(targetCards);
     shuffleDeck();
     
     sessionData = {
@@ -383,15 +414,20 @@ function restart() {
 
 function updateMaxCards() {
     const selectedSuits = getSelectedSuits();
-    const maxCards = selectedSuits.length * 13;
+    const basicDeckSize = selectedSuits.length * 13;
     
+    // Always allow up to 200 cards for marathon mode
+    const maxCards = 200;
     cardsCountSlider.max = maxCards;
     
-    if (parseInt(cardsCountSlider.value) > maxCards) {
-        cardsCountSlider.value = maxCards;
-        cardsCountValue.textContent = maxCards;
-        totalCardsElement.textContent = maxCards;
+    // If no suits selected, reset to minimum
+    if (selectedSuits.length === 0) {
+        cardsCountSlider.value = 1;
+        cardsCountValue.textContent = 1;
+        totalCardsElement.textContent = 1;
     }
+    
+    // Update marathon mode indicator (removed - not needed)
 }
 
 // Event listeners
@@ -1271,10 +1307,27 @@ function loadFocusModePreference() {
     }
 }
 
+// Debug function to check localStorage
+window.debugStorage = function() {
+    const sessions = localStorage.getItem('cardRecognitionSessions');
+    if (sessions) {
+        const parsed = JSON.parse(sessions);
+        console.log('Found sessions in localStorage:', parsed.length, 'sessions');
+        console.log('Sessions:', parsed);
+        return parsed;
+    } else {
+        console.log('No sessions found in localStorage');
+        return null;
+    }
+};
+
 // Initialize
 updateMaxCards();
 loadSessions();
 loadFocusModePreference();
+
+// Debug on load
+console.log('Recognition Trainer loaded. Use debugStorage() in console to check saved sessions.');
 
 // Add event listener for full deck filter checkbox
 document.addEventListener('DOMContentLoaded', () => {
